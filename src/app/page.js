@@ -53,6 +53,14 @@ export default function Home() {
     }
   };
 
+  const handleSummaryUpdate = (updatedSummary) => {
+    setSummary(updatedSummary);
+    toast({
+      title: "Success",
+      description: "Summary updated successfully!",
+    });
+  };
+
   return (
     <main className="container mx-auto px-4 py-10">
       
@@ -71,7 +79,10 @@ export default function Home() {
 
         {summary && (
           <>
-            <SummariseDisplay summary={summary} />
+            <SummariseDisplay 
+              summary={summary} 
+              onSummaryUpdate={handleSummaryUpdate}
+            />
             <EmailShare summary={summary} />
           </>
         )}

@@ -20,32 +20,53 @@ export async function POST(request) {
       );
     }
 
-    // Enhanced default prompt for polished, email-ready summaries
-    const defaultPrompt = `Please create a comprehensive, professional meeting summary that is ready to be shared via email. Structure your response as follows:
+    // Enhanced default prompt for professional, email-ready summaries
+    const defaultPrompt = `Create a comprehensive, professional meeting summary suitable for email distribution to stakeholders. Structure the response as follows:
 
-**Meeting Summary**
+MEETING SUMMARY
 
-**Key Points Discussed:**
-- [List the main topics and discussions]
+1. EXECUTIVE OVERVIEW
+[Provide a 2-3 sentence high-level summary of the meeting's purpose and key outcomes]
 
-**Decisions Made:**
-- [List any decisions that were reached]
+2. KEY DISCUSSION POINTS
+1. [List main topics discussed with brief context]
+2. [Highlight important insights or revelations]
+3. [Note any significant concerns or opportunities raised]
 
-**Action Items:**
-- [List specific tasks with assignees if mentioned]
+3. DECISIONS MADE
+1. [List all decisions reached with clear action items]
+2. [Include any approvals, rejections, or policy changes]
+3. [Note who made the decisions and any conditions]
 
-**Next Steps:**
-- [Outline what needs to happen next]
+4. ACTION ITEMS & ASSIGNMENTS
+1. [Task] - [Assignee] - [Deadline] - [Priority]
+2. [Include specific deliverables and expectations]
+3. [Note any dependencies or blockers]
 
-**Important Notes:**
-- [Any critical information or deadlines mentioned]
+5. NEXT STEPS & TIMELINE
+1. [Immediate next actions (this week)]
+2. [Short-term goals (next 2-4 weeks)]
+3. [Long-term objectives (next quarter)]
+
+6. IMPORTANT NOTES & DEADLINES
+1. [Critical dates, milestones, or deadlines]
+2. [Resource requirements or budget implications]
+3. [Risk factors or contingency plans]
+
+7. KEY METRICS & KPIS
+1. [Any performance indicators discussed]
+2. [Targets or benchmarks mentioned]
+3. [Success criteria for projects]
 
 Please ensure the summary is:
-- Professional and well-formatted
-- Easy to read and understand
-- Comprehensive yet concise
-- Suitable for email distribution
-- Focused on actionable insights`;
+• Professional and business-appropriate
+• Well-structured with clear sections
+• Actionable with specific next steps
+• Concise yet comprehensive
+• Suitable for executive review
+• Easy to scan and reference
+• Use numbered lists instead of bullet points
+• Avoid markdown formatting symbols`;
 
     const prompt = customPrompt || defaultPrompt;
 
@@ -54,24 +75,49 @@ Please ensure the summary is:
       messages: [
         {
           role: "system",
-          content: `You are a professional meeting summarizer with expertise in creating clear, actionable, and well-structured meeting summaries. Your summaries should be:
+          content: `You are a senior business analyst and executive communication specialist with expertise in creating professional meeting summaries for corporate environments. Your summaries should be:
 
-1. **Professional**: Use business-appropriate language and tone
-2. **Structured**: Organize information logically with clear sections
-3. **Actionable**: Highlight decisions, action items, and next steps
-4. **Concise**: Be comprehensive but avoid unnecessary details
-5. **Email-ready**: Format appropriately for email distribution
-6. **Clear**: Use bullet points and formatting for easy reading
+Professional Standards:
+• Use formal business language and professional tone
+• Maintain executive-level communication standards
+• Ensure clarity and precision in all statements
+• Avoid jargon unless industry-specific terms are necessary
 
-Always maintain a professional tone and ensure the summary is immediately useful to recipients who weren't present at the meeting.`
+Structure & Formatting:
+• Use clear, hierarchical numbered headings (1., 2., 3., etc.)
+• Implement numbered lists for easy scanning and reference
+• Group related information logically
+• Use consistent formatting throughout
+• Avoid markdown symbols like ** or ##
+
+Content Quality:
+• Focus on actionable insights and decisions
+• Highlight strategic implications and business impact
+• Include specific deadlines, assignees, and deliverables
+• Identify risks, opportunities, and dependencies
+
+Email Readiness:
+• Format for immediate email distribution
+• Include executive summary for busy stakeholders
+• Make information easily scannable and referenceable
+• Ensure professional appearance in email clients
+• Use numbered lists instead of bullet points for better email formatting
+
+Business Context:
+• Consider stakeholder perspectives and information needs
+• Highlight financial, operational, or strategic implications
+• Include relevant metrics, KPIs, or performance indicators
+• Address potential questions or concerns proactively
+
+Always maintain a professional, authoritative tone suitable for executive communication and ensure the summary provides immediate value to recipients who weren't present at the meeting. Use numbered lists and avoid markdown formatting.`
         },
         {
           role: "user",
           content: `${prompt}\n\nMeeting Transcript:\n${transcript}`
         }
       ],
-      temperature: 0.3,
-      max_tokens: 1500,
+      temperature: 0.2,
+      max_tokens: 2000,
     });
 
     const summary = response.choices[0].message.content;
