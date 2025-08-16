@@ -8,13 +8,6 @@ import formidable from 'formidable';
 const execPromise = promisify(exec);
 const tempDir = path.join(process.cwd(), 'tmp');
 
-// Disable body parser for this route
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
-
 // Parse form with formidable
 const parseForm = async (req) => {
   const form = formidable({ 
@@ -54,18 +47,41 @@ export async function POST(request) {
     const fileType = file.mimetype;
     
     if (fileType === 'application/pdf') {
-      // Extract text from PDF using pdftotext or similar library
-      await execPromise(`pdftotext "${file.filepath}" -`);
-      text = await fs.readFile(`${file.filepath}.txt`, 'utf8');
+      try {
+        // Extract text from PDF using pdftotext
+        const { stdout } = await execPromise(`pdftotext "${file.filepath}" -`);
+        text = stdout;
+      } catch (error) {
+        console.error('PDF extraction error:', error);
+        return NextResponse.json(
+          { error: "Failed to extract text from PDF. Please ensure pdftotext is installed." },
+          { status: 500 }
+        );
+      }
     } else if (fileType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
-      // For DOCX, you would typically use mammoth.js or similar
-      // This is simplified pseudocode
-      const mammoth = require('mammoth');
-      const result = await mammoth.extractRawText({ path: file.filepath });
-      text = result.value;
+      try {
+        // For DOCX, use mammoth.js
+        const mammoth = require('mammoth');
+        const result = await mammoth.extractRawText({ path: file.filepath });
+        text = result.value;
+      } catch (error) {
+        console.error('DOCX extraction error:', error);
+        return NextResponse.json(
+          { error: "Failed to extract text from DOCX file" },
+          { status: 500 }
+        );
+      }
     } else {
       // For other file types, just read as text
-      text = await fs.readFile(file.filepath, 'utf8');
+      try {
+        text = await fs.readFile(file.filepath, 'utf8');
+      } catch (error) {
+        console.error('Text file reading error:', error);
+        return NextResponse.json(
+          { error: "Failed to read text file" },
+          { status: 500 }
+        );
+      }
     }
 
     // Clean up the temp file
@@ -83,4 +99,4 @@ export async function POST(request) {
       { status: 500 }
     );
   }
-}
+} 
