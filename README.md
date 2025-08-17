@@ -14,8 +14,10 @@ An AI-powered web application that summarizes meeting transcripts using the Groq
 -------------------------
 The link to the deployed website is here: 
 https://meet-sumarizer.netlify.app/
+
 The link to documentation is here:
 https://docs.google.com/document/d/1fdl8UP9cqOXxVGDnM-ul6LEyYo6vs0YkeBLz21M9aGU/edit?tab=t.0
+
 ----------------------
 
 ## Usage
